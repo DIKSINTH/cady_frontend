@@ -1,38 +1,36 @@
 import React, { useState, useRef, useEffect } from "react";
 
-let ReactQuill = null;
-let Quill = null;
-
 export default function BlogForm() {
   const quillRef = useRef(null);
+
+  const [ReactQuillComponent, setReactQuillComponent] = useState(null);
+  const [QuillInstance, setQuillInstance] = useState(null);
+
+  const [modules, setModules] = useState(null);
+  const [formats, setFormats] = useState(null);
 
   const [blogHeading, setBlogHeading] = useState("");
   const [blogImage, setBlogImage] = useState(null);
   const [blogContent, setBlogContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Quill modules/formats (loaded later)
-  const [modules, setModules] = useState(null);
-  const [formats, setFormats] = useState(null);
-
-  // Floating Toolbar
+  // Floating toolbar
   const [showFloatToolbar, setShowFloatToolbar] = useState(false);
   const [floatPos, setFloatPos] = useState({ top: 0, left: 0 });
 
-  // Load Quill + plugins only on client
+  // Load all Quill modules safely
   useEffect(() => {
-    async function loadQuill() {
-      const rqn = await import("react-quill-new");
-      ReactQuill = rqn.default;
-      Quill = rqn.Quill;
+    async function load() {
+      const { default: RQ, Quill } = await import("react-quill-new");
 
-      const ImageResizeModule = (await import("quill-image-resize-module"))
-        .default;
+      const ImageResize = (await import("quill-image-resize-module")).default;
       const ImageDrop = (await import("quill-image-drop-module")).default;
 
-      // Register plugins AFTER loading
-      Quill.register("modules/imageResize", ImageResizeModule);
+      Quill.register("modules/imageResize", ImageResize);
       Quill.register("modules/imageDrop", ImageDrop);
+
+      setReactQuillComponent(() => RQ);
+      setQuillInstance(() => Quill);
 
       setModules({
         toolbar: [
@@ -67,17 +65,17 @@ export default function BlogForm() {
       ]);
     }
 
-    loadQuill();
+    load();
   }, []);
 
-  // Selection handler for floating toolbar
+  // Floating selection-popup
   const handleSelection = () => {
-    const quill = quillRef.current?.getEditor();
-    if (!quill) return;
+    const editor = quillRef.current?.getEditor();
+    if (!editor) return;
 
-    const range = quill.getSelection();
+    const range = editor.getSelection();
     if (range && range.length > 0) {
-      const bounds = quill.getBounds(range.index);
+      const bounds = editor.getBounds(range.index);
       setFloatPos({ top: bounds.top - 50, left: bounds.left + 40 });
       setShowFloatToolbar(true);
     } else {
@@ -86,16 +84,16 @@ export default function BlogForm() {
   };
 
   useEffect(() => {
-    if (!quillRef.current) return;
+    if (!ReactQuillComponent || !modules) return;
+
     const editor = quillRef.current?.getEditor();
-    if (!editor) return;
+    if (editor) editor.on("selection-change", handleSelection);
+  }, [modules, ReactQuillComponent]);
 
-    editor.on("selection-change", handleSelection);
-  }, [modules]);
-
-  // Submit blog
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!blogHeading || !blogContent) return alert("Please fill all fields");
 
     const formData = new FormData();
@@ -114,20 +112,22 @@ export default function BlogForm() {
       if (!res.ok) throw new Error("Failed to create blog");
 
       alert("Blog Created Successfully!");
-
       setBlogHeading("");
       setBlogImage(null);
       setBlogContent("");
     } catch (err) {
-      alert("Error while creating blog");
       console.error(err);
+      alert("Error while creating blog");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!modules || !formats || !ReactQuill)
+  // 🟥 If still loading → show loading
+  if (!ReactQuillComponent || !modules)
     return <p className="text-center mt-10">Loading editor…</p>;
+
+  const ReactQuill = ReactQuillComponent;
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
@@ -162,7 +162,7 @@ export default function BlogForm() {
             type="file"
             accept="image/*"
             onChange={(e) => setBlogImage(e.target.files[0])}
-            className="w-full px-4 py-2 border rounded-xl bg-white cursor-pointer"
+            className="w-full px-4 py-2 border rounded-xl cursor-pointer"
           />
         </div>
 
@@ -172,7 +172,7 @@ export default function BlogForm() {
             Blog Content Editor
           </label>
 
-          {/* Floating Toolbar */}
+          {/* Floating toolbar */}
           {showFloatToolbar && (
             <div
               style={{
@@ -185,7 +185,7 @@ export default function BlogForm() {
             >
               <button
                 onClick={() =>
-                  quillRef.current.getEditor().format("bold", true)
+                  quillRef.current?.getEditor().format("bold", true)
                 }
                 className="px-2 font-bold hover:bg-gray-200 rounded"
               >
@@ -193,16 +193,17 @@ export default function BlogForm() {
               </button>
               <button
                 onClick={() =>
-                  quillRef.current.getEditor().format("italic", true)
+                  quillRef.current?.getEditor().format("italic", true)
                 }
                 className="px-2 italic hover:bg-gray-200 rounded"
               >
                 I
               </button>
+
               <input
                 type="color"
                 onChange={(e) =>
-                  quillRef.current.getEditor().format("color", e.target.value)
+                  quillRef.current?.getEditor().format("color", e.target.value)
                 }
                 className="w-8 h-8 rounded cursor-pointer"
               />
@@ -216,7 +217,7 @@ export default function BlogForm() {
             onChange={setBlogContent}
             modules={modules}
             formats={formats}
-            className="bg-white rounded-xl shadow-inner w-full"
+            className="bg-white rounded-xl shadow-inner"
             style={{ height: "550px", marginBottom: "80px" }}
           />
         </div>
@@ -224,7 +225,7 @@ export default function BlogForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition disabled:bg-gray-400"
+          className="w-full py-3 bg-blue-600 text-white rounded-xl"
         >
           {loading ? "Creating..." : "Create Blog"}
         </button>
