@@ -1,27 +1,76 @@
 import React, { useState, useRef, useEffect } from "react";
-import ReactQuill, { Quill } from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
 
-// Image Tools
-import ImageResize from "quill-image-resize-module-react";
-import { ImageDrop } from "quill-image-drop-module";
-
-// Register Stable Modules
-Quill.register("modules/imageResize", ImageResize.default || ImageResize);
-Quill.register("modules/imageDrop", ImageDrop);
+let ReactQuill = null;
+let Quill = null;
 
 export default function BlogForm() {
+  const quillRef = useRef(null);
+
   const [blogHeading, setBlogHeading] = useState("");
   const [blogImage, setBlogImage] = useState(null);
   const [blogContent, setBlogContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const quillRef = useRef(null);
+  // Quill modules/formats (loaded later)
+  const [modules, setModules] = useState(null);
+  const [formats, setFormats] = useState(null);
 
   // Floating Toolbar
   const [showFloatToolbar, setShowFloatToolbar] = useState(false);
   const [floatPos, setFloatPos] = useState({ top: 0, left: 0 });
 
+  // Load Quill + plugins only on client
+  useEffect(() => {
+    async function loadQuill() {
+      const rqn = await import("react-quill-new");
+      ReactQuill = rqn.default;
+      Quill = rqn.Quill;
+
+      const ImageResizeModule = (await import("quill-image-resize-module"))
+        .default;
+      const ImageDrop = (await import("quill-image-drop-module")).default;
+
+      // Register plugins AFTER loading
+      Quill.register("modules/imageResize", ImageResizeModule);
+      Quill.register("modules/imageDrop", ImageDrop);
+
+      setModules({
+        toolbar: [
+          [{ header: [1, 2, 3, 4, 5, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ color: [] }],
+          [{ align: [] }],
+          ["blockquote", "code-block"],
+          ["link", "image", "video"],
+          ["clean"],
+        ],
+        imageResize: true,
+        imageDrop: true,
+      });
+
+      setFormats([
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "list",
+        "bullet",
+        "color",
+        "align",
+        "blockquote",
+        "code-block",
+        "link",
+        "image",
+        "video",
+      ]);
+    }
+
+    loadQuill();
+  }, []);
+
+  // Selection handler for floating toolbar
   const handleSelection = () => {
     const quill = quillRef.current?.getEditor();
     if (!quill) return;
@@ -37,58 +86,16 @@ export default function BlogForm() {
   };
 
   useEffect(() => {
-    const quill = quillRef.current?.getEditor();
-    if (!quill) return;
+    if (!quillRef.current) return;
+    const editor = quillRef.current?.getEditor();
+    if (!editor) return;
 
-    quill.on("selection-change", handleSelection);
-  }, []);
+    editor.on("selection-change", handleSelection);
+  }, [modules]);
 
-  // Toolbar + modules
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, false] }],
-      [{ font: [] }],
-      [{ size: [] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ color: [] }, { background: [] }],
-      [{ script: "sub" }, { script: "super" }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ align: [] }],
-      ["blockquote", "code-block"],
-      ["link", "image", "video"],
-      ["clean"],
-    ],
-    imageResize: {
-      parchment: Quill.import("parchment"),
-      modules: ["Resize", "DisplaySize"],
-    },
-    imageDrop: true,
-  };
-
-  const formats = [
-    "header",
-    "font",
-    "size",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "color",
-    "background",
-    "script",
-    "list",
-    "bullet",
-    "align",
-    "blockquote",
-    "code-block",
-    "link",
-    "image",
-    "video",
-  ];
-
+  // Submit blog
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!blogHeading || !blogContent) return alert("Please fill all fields");
 
     const formData = new FormData();
@@ -119,6 +126,9 @@ export default function BlogForm() {
     }
   };
 
+  if (!modules || !formats || !ReactQuill)
+    return <p className="text-center mt-10">Loading editor…</p>;
+
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
       <form
@@ -138,7 +148,7 @@ export default function BlogForm() {
             type="text"
             value={blogHeading}
             onChange={(e) => setBlogHeading(e.target.value)}
-            className="w-full px-4 py-2 border rounded-xl focus:ring focus:ring-blue-300 outline-none"
+            className="w-full px-4 py-2 border rounded-xl"
             placeholder="Enter blog name"
           />
         </div>
@@ -189,7 +199,6 @@ export default function BlogForm() {
               >
                 I
               </button>
-
               <input
                 type="color"
                 onChange={(e) =>
