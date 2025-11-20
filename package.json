@@ -14,8 +14,9 @@
     "quill-image-drop-module": "^1.0.3",
     "quill-image-resize-module-plus": "^1.0.2",
     "quill-image-resize-module-react": "^3.0.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-quill": "^2.0.0",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
