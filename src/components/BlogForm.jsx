@@ -73,7 +73,7 @@ export default function BlogForm() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/api/admin", {
+      const res = await fetch("https://cady-backend.onrender.com/api/admin", {
         method: "POST",
         body: formData,
       });
