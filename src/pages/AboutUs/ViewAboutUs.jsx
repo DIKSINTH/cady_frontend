@@ -1,10 +1,13 @@
 import DashboardLayout from "../../layout/DashboardLayout";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ViewAboutUs() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:5000/api/aboutus")
@@ -40,9 +43,20 @@ export default function ViewAboutUs() {
           <p>{data.scrollContent}</p>
         </div>
 
+        {data.image && (
+          <div>
+            <h2 className="font-semibold text-lg">Image:</h2>
+            <img
+              src={data.image}
+              alt="About Us"
+              className="max-w-sm rounded shadow"
+            />
+          </div>
+        )}
+
         <button
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          onClick={() => alert("Edit functionality coming soon")}
+          onClick={() => navigate("/dashboard/about-us/edit")}
         >
           ✏ Edit
         </button>

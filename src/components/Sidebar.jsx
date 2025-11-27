@@ -72,7 +72,7 @@ export default function Sidebar() {
           dropdown={dropdown.about}
           toggle={() => toggleDropdown("about")}
           items={["View AboutUs", "View Logos"]}
-          routes={["/view-aboutus", "/view-logos"]}
+          routes={["/dashboard/about-us", "/dashboard/view-logos"]}
         />
 
         <NavItem

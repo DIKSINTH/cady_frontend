@@ -2,7 +2,7 @@ import "./App.css";
 import LoginPage from "./pages/LoginPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ViewAboutUs from "./pages/AboutUs/ViewAboutUs.jsx";
-// import ViewLogos from "./pages/AboutUs/ViewLogos.jsx";
+import EditAboutUs from "./pages/AboutUs/EditAboutUs.jsx";
 
 import {
   BrowserRouter as Router,
@@ -15,16 +15,20 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Redirect to admin login */}
         <Route path="/" element={<Navigate to="/admin" replace />} />
 
+        {/* Login */}
         <Route path="/admin" element={<LoginPage />} />
 
         {/* Dashboard main */}
         <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* About Us pages */}
+        {/* About Us - View Page */}
         <Route path="/dashboard/about-us" element={<ViewAboutUs />} />
-        {/* <Route path="/dashboard/logos" element={<ViewLogos />} /> */}
+
+        {/* About Us - Edit Page */}
+        <Route path="/dashboard/about-us/edit" element={<EditAboutUs />} />
       </Routes>
     </Router>
   );
