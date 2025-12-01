@@ -1,52 +1,68 @@
 import DashboardLayout from "../layout/DashboardLayout";
-import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../css/Dashboard.css";
 
+import {
+  FiTrendingUp,
+  FiBarChart2,
+  FiActivity,
+  FiPieChart,
+} from "react-icons/fi";
+
 export default function Dashboard() {
-  const location = useLocation();
-  const user = location.state?.user;
-
-  const email = user?.Email;
-
   const [date, setDate] = useState(new Date());
 
   return (
-    <DashboardLayout email={email}>
-      <h1 className="text-3xl font-bold mb-5">Dashboard</h1>
+    <DashboardLayout>
+      <h1 className="text-4xl font-bold mb-8 text-black">Dashboard</h1>
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card label="Blogs" count={2} />
-        <Card label="Banner" count={3} />
-        <Card label="Testimonial" count={6} />
-        <Card label="Services" count={9} />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <StatsCard
+          icon={<FiTrendingUp size={50} className="text-blue-500" />}
+          label="Blogs"
+          count={2}
+        />
+        <StatsCard
+          icon={<FiBarChart2 size={50} className="text-blue-500" />}
+          label="Banner"
+          count={3}
+        />
+        <StatsCard
+          icon={<FiActivity size={50} className="text-blue-500" />}
+          label="Testimonial"
+          count={6}
+        />
+        <StatsCard
+          icon={<FiPieChart size={50} className="text-blue-500" />}
+          label="Services"
+          count={9}
+        />
       </div>
 
-      {/* Calendar Section */}
-      <div className="bg-white shadow rounded-md p-5 w-full md:w-1/3">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-lg font-semibold">Calendar</h2>
-          <button className="text-blue-600 text-sm">Show All</button>
+      <div className="custom-calendar-container">
+        <div className="custom-calendar-header">
+          <h2>Calendar</h2>
+          <button>Show All</button>
         </div>
 
-        <Calendar
-          onChange={setDate}
-          value={date}
-          className="rounded-lg border-none shadow-sm"
-        />
+        <Calendar onChange={setDate} value={date} className="custom-calendar" />
       </div>
     </DashboardLayout>
   );
 }
 
-function Card({ label, count }) {
+function StatsCard({ icon, label, count }) {
   return (
-    <div className="bg-blue-50 p-6 rounded-md shadow text-center">
-      <p className="text-lg font-medium">{label}</p>
-      <p className="text-2xl font-bold text-blue-600">{count}</p>
+    <div className="bg-gray-100 p-6 rounded-xl shadow flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        {icon}
+        <div className="text-left">
+          <p className="text-gray-600 text-md">{label}</p>
+          <p className="text-2xl font-bold text-black">{count}</p>
+        </div>
+      </div>
     </div>
   );
 }

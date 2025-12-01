@@ -3,6 +3,11 @@ import LoginPage from "./pages/LoginPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ViewAboutUs from "./pages/AboutUs/ViewAboutUs.jsx";
 import EditAboutUs from "./pages/AboutUs/EditAboutUs.jsx";
+import ViewLogos from "./pages/Logos/ViewLogos.jsx";
+import AddLogo from "./pages/Logos/AddLogo";
+import EditLogo from "./pages/Logos/EditLogo";
+import ContactUs from "./pages/ContactUs/ContactUs.jsx";
+import EditContactUs from "./pages/ContactUs/EditContactUs.jsx";
 
 import {
   BrowserRouter as Router,
@@ -15,20 +20,22 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Redirect to admin login */}
         <Route path="/" element={<Navigate to="/admin" replace />} />
-
-        {/* Login */}
         <Route path="/admin" element={<LoginPage />} />
 
-        {/* Dashboard main */}
         <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* About Us - View Page */}
         <Route path="/dashboard/about-us" element={<ViewAboutUs />} />
-
-        {/* About Us - Edit Page */}
         <Route path="/dashboard/about-us/edit" element={<EditAboutUs />} />
+
+        <Route path="/dashboard/view-logos" element={<ViewLogos />} />
+        <Route path="/dashboard/view-logos/add" element={<AddLogo />} />
+        <Route path="/dashboard/view-logos/edit/:id" element={<EditLogo />} />
+        <Route path="/dashboard/contact-us" element={<ContactUs />} />
+        <Route
+          path="/dashboard/contact-us/edit/:id"
+          element={<EditContactUs />}
+        />
       </Routes>
     </Router>
   );

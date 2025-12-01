@@ -79,7 +79,7 @@ export default function Sidebar() {
           icon={<FiUser />}
           label="Contact Us"
           open={open}
-          route="/contact-us"
+          route="/dashboard/contact-us"
         />
 
         {/* BLOGS */}
