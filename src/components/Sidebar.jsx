@@ -90,7 +90,7 @@ export default function Sidebar() {
           dropdown={dropdown.blogs}
           toggle={() => toggleDropdown("blogs")}
           items={["View Blogs", "View Blogcontent"]}
-          routes={["/view-blogs", "/view-blogcontent"]}
+          routes={["/dashboard/view-blogs", "/dashboard/view-blogcontent"]}
         />
 
         {/* WEBSITE */}

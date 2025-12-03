@@ -12,6 +12,8 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
     "framer-motion": "^12.23.24",
+    "jodit": "^4.7.9",
+    "jodit-react": "^5.2.38",
     "multer": "^2.0.2",
     "react": "^19.2.0",
     "react-calendar": "^6.0.0",
