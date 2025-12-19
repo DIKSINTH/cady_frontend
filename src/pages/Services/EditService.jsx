@@ -1,0 +1,102 @@
+import { useState, useEffect } from "react";
+import DashboardLayout from "../../layout/DashboardLayout";
+import { useNavigate, useParams } from "react-router-dom";
+
+export default function EditService() {
+  const [Name, setName] = useState("");
+  const [Description, setDescription] = useState("");
+  const [URL, setURL] = useState("");
+  const [currentImage, setCurrentImage] = useState(null);
+  const [Image, setImage] = useState(null);
+
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/services/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setName(data.Name);
+        setDescription(data.Description);
+        setURL(data.URL);
+        setCurrentImage(data.Image);
+      });
+  }, [id]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("Name", Name);
+    formData.append("Description", Description);
+    formData.append("URL", URL);
+    if (Image) formData.append("Image", Image);
+
+    const res = await fetch(`http://localhost:5000/api/services/${id}`, {
+      method: "PUT",
+      body: formData,
+    });
+
+    if (res.ok) {
+      alert("Service updated successfully!");
+      navigate("/dashboard/view-services");
+    } else {
+      alert("Error updating service!");
+    }
+  };
+
+  return (
+    <DashboardLayout>
+      <div className="p-4 max-w-3xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4">Edit Service</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Service Name"
+            value={Name}
+            onChange={(e) => setName(e.target.value)}
+            className="border p-2 w-full rounded"
+            required
+          />
+
+          <label>Description</label>
+          <textarea
+            value={Description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="border p-2 w-full rounded h-32"
+            required
+          ></textarea>
+
+          <input
+            type="text"
+            placeholder="URL"
+            value={URL}
+            onChange={(e) => setURL(e.target.value)}
+            className="border p-2 w-full rounded"
+          />
+
+          {currentImage && (
+            <div>
+              <p>Current Image:</p>
+              <img
+                src={`http://localhost:5000/uploads/${currentImage}`}
+                className="w-32 h-32 object-cover rounded"
+              />
+            </div>
+          )}
+
+          <input
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
+            className="border p-2 w-full rounded"
+          />
+
+          <button className="bg-blue-600 text-white px-4 py-2 rounded">
+            Update Service
+          </button>
+        </form>
+      </div>
+    </DashboardLayout>
+  );
+}

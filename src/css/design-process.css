@@ -1,0 +1,137 @@
+/* ===== COLORS ===== */
+.bg-blue {
+  background: #05a9e6;
+}
+
+.bg-orange {
+  background: #f8983a;
+}
+
+/* ===== DIAMOND ===== */
+.diamond {
+  width: 48px;
+  height: 48px;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.diamond::before {
+  content: attr(data-number);
+}
+
+.diamond {
+  transform: rotate(45deg);
+}
+
+.diamond > * {
+  transform: rotate(-45deg);
+}
+
+/* ===== RIBBON BASE ===== */
+.ribbon {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px 48px;
+  clip-path: polygon(4% 0%, 100% 0%, 96% 50%, 100% 100%, 4% 100%, 0% 50%);
+}
+
+/* ===== COLOR VARIANTS ===== */
+.ribbon-blue {
+  background: #05a9e6;
+}
+
+.ribbon-orange {
+  background: #f8983a;
+}
+
+/* ===== RESPONSIVE FIX (ONLY DIAMOND SIZE REDUCED) ===== */
+@media (max-width: 640px) {
+  .diamond {
+    width: 32px; /* ✅ reduced */
+    height: 32px; /* ✅ reduced */
+    font-size: 14px; /* ✅ reduced */
+  }
+}
+
+/* ===== ENTRY ANIMATION ===== */
+.process-step {
+  opacity: 0;
+  animation: fadeSlide 0.9s ease-out forwards;
+}
+
+/* FROM LEFT */
+.process-step.from-left {
+  transform: translateX(-60px);
+}
+
+/* FROM RIGHT */
+.process-step.from-right {
+  transform: translateX(60px);
+}
+
+@keyframes fadeSlide {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* MOBILE: soften animation */
+@media (max-width: 640px) {
+  .process-step.from-left,
+  .process-step.from-right {
+    transform: translateY(40px);
+  }
+
+  @keyframes fadeSlide {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+/* ===== MOBILE: REDUCE ONLY RIBBON SIZE ===== */
+@media (max-width: 640px) {
+  .ribbon {
+    width: 80%;
+    min-height: 40px; /* reduced height */
+    font-size: 14px; /* slightly smaller text */
+    padding: 8px 32px; /* reduced padding */
+  }
+}
+/* ===== MOBILE: PERFECT CENTERED RIBBON + DIAMOND ADJUST ===== */
+@media (max-width: 640px) {
+  /* Center container tighter */
+  .relative.flex.items-center.w-full.max-w-3xl {
+    justify-content: center;
+  }
+
+  /* Ribbon mobile size */
+  .ribbon {
+    width: 70%;
+    min-height: 40px;
+    font-size: 14px;
+    padding: 8px 24px;
+  }
+
+  /* LEFT diamond adjustment */
+  .absolute.-left-6 {
+    left: calc(50% - 35%);
+  }
+
+  /* RIGHT diamond adjustment */
+  .absolute.-right-6 {
+    right: calc(50% - 35%);
+  }
+}

@@ -1,0 +1,19 @@
+/* AndroidIntroSection.css */
+
+/* Define the floating animation keyframes */
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  } /* Moves 10px up */
+  100% {
+    transform: translateY(0px);
+  } /* Returns to start */
+}
+
+/* Apply the animation class */
+.animate-floating {
+  animation: floating 4s ease-in-out infinite; /* Adjust duration (4s) as needed */
+}
