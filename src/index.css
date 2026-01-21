@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  padding: 0;
+}
+/* ===== Calendar Container (Grey Box) ===== */
+.custom-calendar-container {
+  background: #f3f4f6; /* grey */
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  width: 100%;
+  max-width: 320px;
+}
+
+/* ===== Title Row (Calendar / Show All) ===== */
+.custom-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.custom-calendar-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+.custom-calendar-header button {
+  font-size: 14px;
+  color: #3b82f6; /* sky blue */
+}
+
+.custom-calendar-header button:hover {
+  text-decoration: underline;
+}
+
+/* ===== React-Calendar Sky Blue Theme ===== */
+.custom-calendar {
+  border: none !important;
+  width: 100%;
+  background: transparent !important;
+}
+
+/* Month name row */
+.custom-calendar .react-calendar__navigation {
+  background: transparent;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #e5e7eb; /* thin grey line */
+  padding-bottom: 6px;
+}
+
+.custom-calendar .react-calendar__navigation button {
+  color: #2563eb; /* sky blue arrows */
+  font-size: 16px;
+}
+
+.custom-calendar .react-calendar__navigation button:disabled {
+  opacity: 0.5;
+}
+
+/* Weekdays (Su, Mo, etc.) */
+.custom-calendar .react-calendar__month-view__weekdays {
+  text-align: center;
+  color: #475569;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* Date cells */
+.custom-calendar .react-calendar__tile {
+  padding: 6px;
+  border-radius: 8px;
+  transition: 0.2s;
+  font-size: 14px;
+  color: #334155;
+}
+
+/* Hover effect */
+.custom-calendar .react-calendar__tile:hover {
+  background: #e0f2fe !important; /* light sky blue */
+}
+
+/* Selected date */
+.custom-calendar .react-calendar__tile--active {
+  background: #3b82f6 !important; /* solid sky blue */
+  color: white !important;
+  border-radius: 8px;
+}
+
+/* Neighboring month dates */
+.custom-calendar .react-calendar__month-view__days__day--neighboringMonth {
+  color: #9ca3af;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* index.css */
+.cady {
+  background-color: #3498db;
+}
+.cady-text {
+  color: #3498db;
+}
+
+/* Loader*/
+
+@keyframes loading-bar {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 1.2s ease-in-out infinite;
+}

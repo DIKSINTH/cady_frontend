@@ -1,0 +1,58 @@
+/* CrossPlatformDetails.css */
+.tech-list {
+  list-style: none;
+  padding-left: 0;
+  position: relative;
+}
+
+.tech-item {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.tech-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #3498db; /* blue-600 */
+  z-index: 2;
+}
+
+/* Vertical line connecting the dots */
+.tech-list::before {
+  content: "";
+  position: absolute;
+  left: 4.5px;
+  top: 0.65rem;
+  width: 1px;
+  height: calc(100% - 1.3rem);
+  background-color: #3498db; /* blue-600 */
+  z-index: 1;
+}
+
+/* Alternative: Create connection lines between items */
+.tech-item::after {
+  content: "";
+  position: absolute;
+  left: 4.5px;
+  top: 1.6rem;
+  width: 1px;
+  height: calc(100% + 0.75rem);
+  background-color: #3498db; /* blue-600 */
+  z-index: 1;
+}
+
+/* Remove the line from the last item */
+.tech-item:last-child::after {
+  display: none;
+}
+
+/* Make sure the last item doesn't have a line extending too far */
+.tech-list:last-child .tech-item:last-child::after {
+  display: none;
+}
